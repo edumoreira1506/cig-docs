@@ -23,6 +23,7 @@
   "homepage": "https://github.com/edumoreira1506/cig-docs#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "joi": "^17.4.1",
     "joi-to-swagger": "^5.2.0",
     "module-alias": "^2.2.2",
     "swagger-ui-express": "^4.1.6"

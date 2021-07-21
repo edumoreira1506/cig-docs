@@ -1,6 +1,7 @@
-import { SwaggerSchema } from 'joi-to-swagger'
+import { ObjectSchema } from 'joi'
+import j2s from 'joi-to-swagger'
 
-export default function createDoc(route: string, title: string, description: string, tags: string[], bodyObject: SwaggerSchema): Record<string, any> {
+export default function createDoc(route: string, title: string, description: string, tags: string[], objectSchema: ObjectSchema): Record<string, any> {
   return {
     [route]: {
       post: {
@@ -11,7 +12,7 @@ export default function createDoc(route: string, title: string, description: str
           {
             in: 'body',
             name: 'payload',
-            schema: bodyObject
+            schema: j2s(objectSchema).swagger
           }
         ],
         responses:{
