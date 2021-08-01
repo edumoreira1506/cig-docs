@@ -5,7 +5,7 @@ import createDoc from '@Docs/createDoc';
 describe('createDoc', () => {
   it('format the documment correctly', () => {
     const unformatted = {
-      route: 'example',
+      route: '/example',
       description: 'description example',
       tags: ['tag example'],
     };
@@ -17,7 +17,7 @@ describe('createDoc', () => {
       }
     ];
     const formatted = {
-      [`v1/${unformatted.route}`]: {
+      [`v1${unformatted.route}`]: {
         post: {
           summary: unformattedPaths[0].title,
           description: unformattedPaths[0].description,
@@ -44,7 +44,7 @@ describe('createDoc', () => {
       version: 2
     };
     const unformatted = {
-      route: 'example',
+      route: '/example',
       description: 'description example',
       tags: ['tag example'],
     };
@@ -56,7 +56,7 @@ describe('createDoc', () => {
       }
     ];
     const formatted = {
-      [`v${options.version}/${unformatted.route}`]: {
+      [`v${options.version}${unformatted.route}`]: {
         post: {
           summary: unformattedPaths[0].title,
           description: unformattedPaths[0].description,
@@ -84,7 +84,7 @@ describe('createDoc', () => {
       password: Joi.string().required(),
     });
     const unformatted = {
-      route: 'example',
+      route: '/example',
       description: 'description example',
       tags: ['tag example'],
     };
@@ -97,7 +97,7 @@ describe('createDoc', () => {
       }
     ];
     const formatted = {
-      [`v1/${unformatted.route}`]: {
+      [`v1${unformatted.route}`]: {
         post: {
           summary: unformattedPaths[0].title,
           description: unformattedPaths[0].description,
