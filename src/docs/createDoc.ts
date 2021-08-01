@@ -1,5 +1,5 @@
-import { ObjectSchema } from 'joi'
-import j2s from 'joi-to-swagger'
+import { ObjectSchema } from 'joi';
+import j2s from 'joi-to-swagger';
 
 export interface IDocOptions {
   version?: number;
@@ -36,5 +36,5 @@ export default function createDoc(
         }
       }
     },
-  }
+  };
 }

@@ -1,6 +1,6 @@
-import { IDocsConfig } from "@Types/docs";
+import { IDocsConfig, ISwaggerDocument } from '@Types/docs';
 
-export default function createSwaggerDocument(docsConfig: IDocsConfig, paths: Record<string, any>) {
+export default function createSwaggerDocument(docsConfig: IDocsConfig, paths: Record<string, any>): ISwaggerDocument {
   return {
     swagger: '2.0',
     title : docsConfig.title,
@@ -12,5 +12,5 @@ export default function createSwaggerDocument(docsConfig: IDocsConfig, paths: Re
     consumes: [ 'application/json' ],
     produces: [ 'application/json' ],
     paths
-  }
+  };
 }
