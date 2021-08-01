@@ -1,14 +1,14 @@
 import 'module-alias/register';
 
-import swaggerUi from 'swagger-ui-express'
+import swaggerUi from 'swagger-ui-express';
 
 import { IDocsConfig } from '@Types/docs';
-import createSwaggerDocument from '@Docs/createSwaggerDocument'
+import createSwaggerDocument from '@Docs/createSwaggerDocument';
 
-export { default as createDoc } from '@Docs/createDoc'
+export { default as createDoc } from '@Docs/createDoc';
 
-export default function createDocs(docsConfig: IDocsConfig, paths: Record<string, any>) {
-  const swaggerDocument = createSwaggerDocument(docsConfig, paths)
+export default function createDocs(docsConfig: IDocsConfig, paths: Record<string, any>): any[] {
+  const swaggerDocument = createSwaggerDocument(docsConfig, paths);
 
-  return [swaggerUi.serve, swaggerUi.setup(swaggerDocument)]
+  return [swaggerUi.serve, swaggerUi.setup(swaggerDocument)];
 }
