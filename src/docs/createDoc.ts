@@ -19,7 +19,7 @@ export default function createDoc(
   docOptions?: IDocOptions
 ): Record<string, any> {
   return {
-    [`v${docOptions?.version ?? 1}/${route}`]: Object.fromEntries(paths.map(path => ([
+    [`v${docOptions?.version ?? 1}${route}`]: Object.fromEntries(paths.map(path => ([
       path.method,
       createDocPath({
         description: path.description,
