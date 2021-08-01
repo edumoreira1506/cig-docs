@@ -1,40 +1,32 @@
 import { ObjectSchema } from 'joi';
-import j2s from 'joi-to-swagger';
+import createDocPath from './createDocPath';
 
 export interface IDocOptions {
   version?: number;
 }
 
+export interface IDocPath {
+  title: string;
+  description: string;
+  objectSchema?: ObjectSchema;
+  method: string;
+}
+
 export default function createDoc(
   route: string,
-  title: string,
-  description: string,
   tags: string[],
-  objectSchema: ObjectSchema,
+  paths: IDocPath[],
   docOptions?: IDocOptions
 ): Record<string, any> {
   return {
-    [`v${docOptions?.version ?? 1}}/${route}`]: {
-      post: {
-        summary: title,
-        description,
+    [`v${docOptions?.version ?? 1}/${route}`]: Object.fromEntries(paths.map(path => ([
+      path.method,
+      createDocPath({
+        description: path.description,
         tags,
-        parameters: [
-          {
-            in: 'body',
-            name: 'payload',
-            schema: j2s(objectSchema).swagger
-          }
-        ],
-        responses:{
-          200: {
-            description : 'OK'
-          },
-          400: {
-            description : 'Error'
-          }
-        }
-      }
-    },
+        title: path.title,
+        objectSchema: path.objectSchema,
+      })
+    ])))
   };
 }
