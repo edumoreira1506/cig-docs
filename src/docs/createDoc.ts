@@ -1,9 +1,20 @@
 import { ObjectSchema } from 'joi'
 import j2s from 'joi-to-swagger'
 
-export default function createDoc(route: string, title: string, description: string, tags: string[], objectSchema: ObjectSchema): Record<string, any> {
+export interface IDocOptions {
+  version?: number;
+}
+
+export default function createDoc(
+  route: string,
+  title: string,
+  description: string,
+  tags: string[],
+  objectSchema: ObjectSchema,
+  docOptions?: IDocOptions
+): Record<string, any> {
   return {
-    [route]: {
+    [`v${docOptions?.version ?? 1}}/${route}`]: {
       post: {
         summary: title,
         description,
