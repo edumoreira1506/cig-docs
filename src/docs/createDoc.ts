@@ -1,5 +1,6 @@
 import { ObjectSchema } from 'joi';
-import createDocPath from './createDocPath';
+
+import createDocPath, { IPathVariable } from './createDocPath';
 
 export interface IDocOptions {
   version?: number;
@@ -7,9 +8,10 @@ export interface IDocOptions {
 
 export interface IDocPath {
   title: string;
-  description: string;
+  description?: string;
   objectSchema?: ObjectSchema;
   method: string;
+  pathVariables?: IPathVariable[];
 }
 
 export default function createDoc(
@@ -22,10 +24,11 @@ export default function createDoc(
     [`v${docOptions?.version ?? 1}${route}`]: Object.fromEntries(paths.map(path => ([
       path.method,
       createDocPath({
-        description: path.description,
+        description: path.description ?? '',
         tags,
         title: path.title,
         objectSchema: path.objectSchema,
+        pathVariables: path.pathVariables
       })
     ])))
   };
