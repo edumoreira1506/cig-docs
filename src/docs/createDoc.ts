@@ -1,5 +1,6 @@
 import { ObjectSchema } from 'joi';
-import createDocPath from './createDocPath';
+
+import createDocPath, { IPathVariable } from './createDocPath';
 
 export interface IDocOptions {
   version?: number;
@@ -10,6 +11,7 @@ export interface IDocPath {
   description?: string;
   objectSchema?: ObjectSchema;
   method: string;
+  pathVariables?: IPathVariable[];
 }
 
 export default function createDoc(
@@ -26,6 +28,7 @@ export default function createDoc(
         tags,
         title: path.title,
         objectSchema: path.objectSchema,
+        pathVariables: path.pathVariables
       })
     ])))
   };

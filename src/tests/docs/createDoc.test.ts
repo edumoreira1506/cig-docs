@@ -137,4 +137,51 @@ describe('createDoc', () => {
       createDoc(unformatted.route, unformatted.tags, unformattedPaths)
     ).toMatchObject(formatted);
   });
+
+  it('applies the path variables', () => {
+    const unformatted = {
+      route: '/users/{userId}',
+      description: 'description example',
+      tags: ['tag example'],
+      pathVariables: [{ name: 'userId', type: 'string' }]
+    };
+    const unformattedPaths = [
+      {
+        method: 'post',
+        title: 'title example',
+        description: 'description example',
+        pathVariables: unformatted.pathVariables,
+      }
+    ];
+    const formatted = {
+      [`v1${unformatted.route}`]: {
+        post: {
+          summary: unformattedPaths[0].title,
+          description: unformattedPaths[0].description,
+          tags: unformatted.tags,
+          responses:{
+            200: {
+              description : 'OK'
+            },
+            400: {
+              description : 'Error'
+            }
+          },
+          parameters: [
+            {
+              in: 'path',
+              name: unformatted.pathVariables[0].name,
+              schema: {
+                type: unformatted.pathVariables[0].type
+              }
+            }
+          ]
+        }
+      },
+    };
+
+    expect(
+      createDoc(unformatted.route, unformatted.tags, unformattedPaths)
+    ).toMatchObject(formatted);
+  });
 });
