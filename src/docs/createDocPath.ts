@@ -4,6 +4,7 @@ import j2s from 'joi-to-swagger';
 export interface IPathVariable {
   name: string;
   type: string;
+  description?: string;
 }
 
 export interface IDocPathOptions {
@@ -21,6 +22,7 @@ export default function createDocPath({ title, description, tags, objectSchema, 
     schema: {
       type: pathVariable.type
     },
+    description: pathVariable.description ?? ''
   }));
 
   return {
