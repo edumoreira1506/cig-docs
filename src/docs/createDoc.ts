@@ -7,7 +7,7 @@ export interface IDocOptions {
 
 export interface IDocPath {
   title: string;
-  description: string;
+  description?: string;
   objectSchema?: ObjectSchema;
   method: string;
 }
@@ -22,7 +22,7 @@ export default function createDoc(
     [`v${docOptions?.version ?? 1}${route}`]: Object.fromEntries(paths.map(path => ([
       path.method,
       createDocPath({
-        description: path.description,
+        description: path.description ?? '',
         tags,
         title: path.title,
         objectSchema: path.objectSchema,
