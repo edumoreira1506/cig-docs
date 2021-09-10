@@ -4,6 +4,7 @@ import createDocPath, { IPathVariable } from './createDocPath';
 
 export interface IDocOptions {
   version?: number;
+  pathVariables?: IPathVariable[];
 }
 
 export interface IDocPath {
@@ -17,7 +18,6 @@ export default function createDoc(
   route: string,
   tags: string[],
   paths: IDocPath[],
-  pathVariables?: IPathVariable[],
   docOptions?: IDocOptions
 ): Record<string, any> {
   return {
@@ -28,7 +28,7 @@ export default function createDoc(
         tags,
         title: path.title,
         objectSchema: path.objectSchema,
-        pathVariables
+        pathVariables: docOptions?.pathVariables
       })
     ])))
   };
