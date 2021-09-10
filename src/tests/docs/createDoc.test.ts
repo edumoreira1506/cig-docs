@@ -150,7 +150,6 @@ describe('createDoc', () => {
         method: 'post',
         title: 'title example',
         description: 'description example',
-        pathVariables: unformatted.pathVariables,
       }
     ];
     const formatted = {
@@ -181,7 +180,7 @@ describe('createDoc', () => {
     };
 
     expect(
-      createDoc(unformatted.route, unformatted.tags, unformattedPaths)
+      createDoc(unformatted.route, unformatted.tags, unformattedPaths, { pathVariables: unformatted.pathVariables })
     ).toMatchObject(formatted);
   });
 });
