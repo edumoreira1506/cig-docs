@@ -183,4 +183,48 @@ describe('createDoc', () => {
       createDoc(unformatted.route, unformatted.tags, unformattedPaths, { pathVariables: unformatted.pathVariables })
     ).toMatchObject(formatted);
   });
+
+  it('applies the query param variables', () => {
+    const unformatted = {
+      route: '/users/{userId}',
+      description: 'description example',
+      tags: ['tag example'],
+    };
+    const unformattedPaths = [
+      {
+        method: 'post',
+        title: 'title example',
+        description: 'description example',
+        queryParams: [{ name: 'userId', type: 'string' }]
+      }
+    ];
+    const formatted = {
+      [`v1${unformatted.route}`]: {
+        post: {
+          summary: unformattedPaths[0].title,
+          description: unformattedPaths[0].description,
+          tags: unformatted.tags,
+          responses:{
+            200: {
+              description : 'OK'
+            },
+            400: {
+              description : 'Error'
+            }
+          },
+          parameters: [
+            {
+              in: 'query',
+              name: unformattedPaths[0].queryParams[0].name,
+              schema: {
+                type: unformattedPaths[0].queryParams[0].type
+              }
+            }
+          ]
+        }
+      },
+    };
+
+    expect(createDoc(unformatted.route, unformatted.tags, unformattedPaths)).toMatchObject(formatted);
+  });
 });

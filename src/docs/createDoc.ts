@@ -1,10 +1,10 @@
 import { ObjectSchema } from 'joi';
 
-import createDocPath, { IPathVariable } from './createDocPath';
+import createDocPath, { IVariable } from './createDocPath';
 
 export interface IDocOptions {
   version?: number;
-  pathVariables?: IPathVariable[];
+  pathVariables?: IVariable[];
 }
 
 export interface IDocPath {
@@ -12,6 +12,7 @@ export interface IDocPath {
   description?: string;
   objectSchema?: ObjectSchema;
   method: string;
+  queryParams?: IVariable[]
 }
 
 export default function createDoc(
@@ -28,7 +29,8 @@ export default function createDoc(
         tags,
         title: path.title,
         objectSchema: path.objectSchema,
-        pathVariables: docOptions?.pathVariables
+        pathVariables: docOptions?.pathVariables,
+        queryParams: path.queryParams,
       })
     ])))
   };
