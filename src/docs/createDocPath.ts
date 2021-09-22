@@ -1,7 +1,7 @@
 import { ObjectSchema } from 'joi';
 import j2s from 'joi-to-swagger';
 
-export interface IPathVariable {
+export interface IVariable {
   name: string;
   type: string;
   description?: string;
@@ -12,18 +12,32 @@ export interface IDocPathOptions {
   description: string;
   tags: string[];
   objectSchema?: ObjectSchema;
-  pathVariables?: IPathVariable[];
+  pathVariables?: IVariable[];
+  queryParams?: IVariable[];
 }
 
-export default function createDocPath({ title, description, tags, objectSchema, pathVariables = [] }: IDocPathOptions): Record<string, any> {
-  const formattedPathVariables = pathVariables.map(pathVariable => ({
-    in: 'path',
-    name: pathVariable.name,
-    schema: {
-      type: pathVariable.type
-    },
-    description: pathVariable.description ?? ''
-  }));
+const formatVariable = (variable: IVariable, type: string) => ({
+  in: type,
+  name: variable.name,
+  schema: {
+    type: variable.type
+  },
+  description: variable.description ?? ''
+});
+
+const formatPathVariable = (variable: IVariable) => formatVariable(variable, 'path');
+const formatQueryVariable = (variable: IVariable) => formatVariable(variable, 'query');
+
+export default function createDocPath({
+  title,
+  description,
+  tags,
+  objectSchema,
+  pathVariables = [],
+  queryParams = []
+}: IDocPathOptions): Record<string, any> {
+  const formattedPathVariables = pathVariables.map(formatPathVariable);
+  const formattedQueryVariables = queryParams.map(formatQueryVariable);
 
   return {
     summary: title,
@@ -36,10 +50,11 @@ export default function createDocPath({ title, description, tags, objectSchema, 
           name: 'payload',
           schema: j2s(objectSchema).swagger
         },
-        ...formattedPathVariables
+        ...formattedPathVariables,
+        ...formattedQueryVariables
       ],
     }) : ({
-      parameters: [...formattedPathVariables]
+      parameters: [...formattedPathVariables, ...formattedQueryVariables]
     })),
     responses: {
       200: {
