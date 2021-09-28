@@ -59,7 +59,7 @@ export default function createDocPath({
         ...formattedHeaderVariables
       ],
     }) : ({
-      parameters: [...formattedPathVariables, ...formattedQueryVariables]
+      parameters: [...formattedPathVariables, ...formattedQueryVariables, ...formattedHeaderVariables]
     })),
     responses: {
       200: {
