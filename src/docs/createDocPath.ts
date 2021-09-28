@@ -14,6 +14,7 @@ export interface IDocPathOptions {
   objectSchema?: ObjectSchema;
   pathVariables?: IVariable[];
   queryParams?: IVariable[];
+  headerParams?: IVariable[];
 }
 
 const formatVariable = (variable: IVariable, type: string) => ({
@@ -27,6 +28,7 @@ const formatVariable = (variable: IVariable, type: string) => ({
 
 const formatPathVariable = (variable: IVariable) => formatVariable(variable, 'path');
 const formatQueryVariable = (variable: IVariable) => formatVariable(variable, 'query');
+const formatHeaderVariable = (variable: IVariable) => formatVariable(variable, 'header');
 
 export default function createDocPath({
   title,
@@ -34,10 +36,12 @@ export default function createDocPath({
   tags,
   objectSchema,
   pathVariables = [],
-  queryParams = []
+  queryParams = [],
+  headerParams = [],
 }: IDocPathOptions): Record<string, any> {
   const formattedPathVariables = pathVariables.map(formatPathVariable);
   const formattedQueryVariables = queryParams.map(formatQueryVariable);
+  const formattedHeaderVariables = headerParams.map(formatHeaderVariable);
 
   return {
     summary: title,
@@ -51,10 +55,11 @@ export default function createDocPath({
           schema: j2s(objectSchema).swagger
         },
         ...formattedPathVariables,
-        ...formattedQueryVariables
+        ...formattedQueryVariables,
+        ...formattedHeaderVariables
       ],
     }) : ({
-      parameters: [...formattedPathVariables, ...formattedQueryVariables]
+      parameters: [...formattedPathVariables, ...formattedQueryVariables, ...formattedHeaderVariables]
     })),
     responses: {
       200: {

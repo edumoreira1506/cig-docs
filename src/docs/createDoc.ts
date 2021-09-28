@@ -12,7 +12,8 @@ export interface IDocPath {
   description?: string;
   objectSchema?: ObjectSchema;
   method: string;
-  queryParams?: IVariable[]
+  queryParams?: IVariable[];
+  headerParams?: IVariable[];
 }
 
 export default function createDoc(
@@ -31,6 +32,7 @@ export default function createDoc(
         objectSchema: path.objectSchema,
         pathVariables: docOptions?.pathVariables,
         queryParams: path.queryParams,
+        headerParams: path.headerParams,
       })
     ])))
   };
