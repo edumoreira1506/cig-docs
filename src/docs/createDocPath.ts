@@ -29,7 +29,12 @@ const formatVariable = (variable: IVariable, type: string) => ({
 const formatPathVariable = (variable: IVariable) => formatVariable(variable, 'path');
 const formatQueryVariable = (variable: IVariable) => formatVariable(variable, 'query');
 const formatHeaderVariable = (variable: IVariable) => formatVariable(variable, 'header');
-const formatFileVariable = (fieldName: string) => formatVariable({ name: fieldName, type: 'file' }, 'formData');
+
+const formatFileVariable = (fieldName: string) => ({
+  in: 'formData',
+  name: fieldName,
+  type: 'file'
+});
 
 export default function createDocPath({
   title,
