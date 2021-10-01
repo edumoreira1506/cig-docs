@@ -271,4 +271,97 @@ describe('createDoc', () => {
 
     expect(createDoc(unformatted.route, unformatted.tags, unformattedPaths)).toMatchObject(formatted);
   });
+
+  it('applies the multipart/form-data param when has files', () => {
+    const unformatted = {
+      route: '/users/{userId}',
+      description: 'description example',
+      tags: ['tag example'],
+    };
+    const unformattedPaths = [
+      {
+        method: 'post',
+        title: 'title example',
+        description: 'description example',
+        files: ['example-file.png']
+      }
+    ];
+    const formatted = {
+      [`v1${unformatted.route}`]: {
+        post: {
+          summary: unformattedPaths[0].title,
+          description: unformattedPaths[0].description,
+          tags: unformatted.tags,
+          responses:{
+            200: {
+              description : 'OK'
+            },
+            400: {
+              description : 'Error'
+            }
+          },
+          consumes: ['multipart/form-data']
+        }
+      },
+    };
+
+    expect(createDoc(unformatted.route, unformatted.tags, unformattedPaths)).toMatchObject(formatted);
+  });
+
+  it('converts joi schema to form data', () => {
+    const mockSchema = Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    });
+    const unformatted = {
+      route: '/users/{userId}',
+      description: 'description example',
+      tags: ['tag example'],
+    };
+    const unformattedPaths = [
+      {
+        method: 'post',
+        title: 'title example',
+        description: 'description example',
+        files: ['example-file.png'],
+        objectSchema: mockSchema
+      }
+    ];
+    const formatted = {
+      [`v1${unformatted.route}`]: {
+        post: {
+          summary: unformattedPaths[0].title,
+          description: unformattedPaths[0].description,
+          tags: unformatted.tags,
+          responses:{
+            200: {
+              description : 'OK'
+            },
+            400: {
+              description : 'Error'
+            }
+          },
+          parameters: [
+            {
+              in: 'formData',
+              name: 'email',
+              type: 'string'
+            },
+            {
+              in: 'formData',
+              name: 'password',
+              type: 'string'
+            },
+            {
+              in: 'formData',
+              name: unformattedPaths[0].files[0],
+              type: 'file'
+            }
+          ]
+        }
+      },
+    };
+
+    expect(createDoc(unformatted.route, unformatted.tags, unformattedPaths)).toMatchObject(formatted);
+  });
 });
