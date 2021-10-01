@@ -29,6 +29,7 @@ const formatVariable = (variable: IVariable, type: string) => ({
 const formatPathVariable = (variable: IVariable) => formatVariable(variable, 'path');
 const formatQueryVariable = (variable: IVariable) => formatVariable(variable, 'query');
 const formatHeaderVariable = (variable: IVariable) => formatVariable(variable, 'header');
+const formatFileVariable = (fieldName: string) => formatVariable({ name: fieldName, type: 'file' }, 'formData');
 
 export default function createDocPath({
   title,
@@ -38,29 +39,23 @@ export default function createDocPath({
   pathVariables = [],
   queryParams = [],
   headerParams = [],
-}: IDocPathOptions): Record<string, any> {
+  files = []
+}: IDocPathOptions & { files?: string[] }): Record<string, any> {
   const formattedPathVariables = pathVariables.map(formatPathVariable);
   const formattedQueryVariables = queryParams.map(formatQueryVariable);
   const formattedHeaderVariables = headerParams.map(formatHeaderVariable);
+  const formattedFileVariables = files?.map(formatFileVariable) ?? [];
+  const hasFiles = Boolean(files?.length);
 
-  return {
+  const commonSwagger = {
     summary: title,
     description,
     tags,
-    ...(objectSchema ? ({
-      parameters: [
-        {
-          in: 'body',
-          name: 'payload',
-          schema: j2s(objectSchema).swagger
-        },
-        ...formattedPathVariables,
-        ...formattedQueryVariables,
-        ...formattedHeaderVariables
-      ],
-    }) : ({
-      parameters: [...formattedPathVariables, ...formattedQueryVariables, ...formattedHeaderVariables]
-    })),
+    ...(hasFiles ? ({
+      consumes: [
+        'multipart/form-data'
+      ]
+    }) : ({})),
     responses: {
       200: {
         description : 'OK'
@@ -68,6 +63,37 @@ export default function createDocPath({
       400: {
         description : 'Error'
       }
-    }
+    },
+  };
+
+  if (objectSchema) {
+    const swaggerSchema = j2s(objectSchema).swagger;
+    const bodyParams = !hasFiles ? ([
+      {
+        in: 'body',
+        name: 'payload',
+        schema: swaggerSchema
+      }
+    ]) : Object.entries(swaggerSchema.properties).map(([key, value]: [string, any]) => ({
+      in: 'formData',
+      name: key,
+      type: value.type
+    }));
+
+    return {
+      ...commonSwagger,
+      parameters: [
+        ...bodyParams,
+        ...formattedFileVariables,
+        ...formattedPathVariables,
+        ...formattedQueryVariables,
+        ...formattedHeaderVariables
+      ],
+    };
+  }
+  
+  return {
+    ...commonSwagger,
+    parameters: [...formattedFileVariables, ...formattedPathVariables, ...formattedQueryVariables, ...formattedHeaderVariables],
   };
 }

@@ -14,6 +14,7 @@ export interface IDocPath {
   method: string;
   queryParams?: IVariable[];
   headerParams?: IVariable[];
+  files?: string[];
 }
 
 export default function createDoc(
@@ -33,6 +34,7 @@ export default function createDoc(
         pathVariables: docOptions?.pathVariables,
         queryParams: path.queryParams,
         headerParams: path.headerParams,
+        files: path.files,
       })
     ])))
   };
